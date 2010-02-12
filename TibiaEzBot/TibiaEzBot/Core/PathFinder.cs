@@ -173,7 +173,6 @@ namespace TibiaEzBot.Core
                         }
 
                         int foundInOpenIndex = -1;
-
                         for (int j = 0; j < mOpen.Count; j++)
                         {
                             if (mOpen[j].X == newNode.X && mOpen[j].Y == newNode.Y)

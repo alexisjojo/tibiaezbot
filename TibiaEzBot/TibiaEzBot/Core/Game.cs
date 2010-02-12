@@ -26,6 +26,18 @@ namespace TibiaEzBot.Core
 			kernel = Kernel.GetInstance();
 		}
 		
+		public bool Attack(Creature creature)
+		{
+			if(kernel.WorldProtocol != null)
+			{
+				kernel.WorldProtocol.SendAttackCreature(creature.GetId());
+				kernel.Client.Memory.WriteUInt32(Addresses.Player.TargetID, creature.GetId());
+				return true;
+			}
+			
+			return true;
+		}
+		
 		public bool Say(String words, SpeechType type) 
 		{
 			if(kernel.WorldProtocol != null)
@@ -145,7 +157,7 @@ namespace TibiaEzBot.Core
 		
 		public void OnReceiveCreatureSquare(Creature creature)
 		{
-			
+			kernel.AutoAttack.OnReceiveCreatureSquare(creature);
 		}
 	}
 }
