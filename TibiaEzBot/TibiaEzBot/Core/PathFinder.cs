@@ -116,7 +116,7 @@ namespace TibiaEzBot.Core
         {
             lock (this)
             {
-                if ((DateTime.UtcNow - lastMapUpdate).TotalMilliseconds > 500)
+                if ((DateTime.UtcNow - lastMapUpdate).TotalMilliseconds > 200)
                 {
                     Position currentPos = GlobalVariables.GetPlayerPosition();
                     upDateMap((int)currentPos.X - 8, (int)currentPos.Y - 6, (int)currentPos.Z, 18, 14);
