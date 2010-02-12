@@ -18,7 +18,7 @@ namespace TibiaEzBot.Core
         private static uint playerAddress;
 
         private static bool connected;
-		private static bool attacking;
+		private static uint attackId;
 
         private static byte worldLightLevel;
         private static byte worldLightColor;
@@ -58,8 +58,8 @@ namespace TibiaEzBot.Core
         public static uint GetPlayerMemoryAddress() { return playerAddress; }
         public static void SetPlayerMemoryAddress(uint value) { playerAddress = value; }
 		
-		public static bool IsAttacking() { return attacking; }
-        public static void SetAttacking(bool value) { attacking  = value; }
+		public static bool IsAttacking() { return attackId != 0; }
+        public static void SetAttackId(uint value) { attackId  = value; }
 		
         public static uint GetPlayerStatus(PlayerStatus status)
         {
@@ -119,7 +119,7 @@ namespace TibiaEzBot.Core
             connected = false;
             canReportBugs = false;
             playerAddress = 0;
-
+			attackId = 0;
 		}
     }
 }

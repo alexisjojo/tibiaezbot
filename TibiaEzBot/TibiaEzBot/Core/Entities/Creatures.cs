@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace TibiaEzBot.Core.Entities
 {
@@ -20,11 +21,16 @@ namespace TibiaEzBot.Core.Entities
         private Creatures() { }
 
         private IDictionary<uint, Creature> creatures = new Dictionary<uint, Creature>();
-
+		private ReaderWriterLockSlim creaturesLock;
+		
+		public ReaderWriterLockSlim CreaturesLock { get { return creaturesLock; } }
+		
         public Creature AddCreature(uint id)
         {
             Creature cr = new Creature(id);
-            creatures.Add(id, cr);
+			creaturesLock.EnterWriteLock();
+			creatures.Add(id, cr);
+			creaturesLock.ExitWriteLock();
             return cr;
         }
 
@@ -43,14 +49,22 @@ namespace TibiaEzBot.Core.Entities
 
         public void RemoveCreature(uint id)
         {
-            if (creatures.ContainsKey(id))
+			creaturesLock.EnterWriteLock();
+            
+			if (creatures.ContainsKey(id))
                 creatures.Remove(id);
-        }
+			
+			creaturesLock.ExitWriteLock();
+        }	
 
         public void Clear()
         {
             Logger.Log("Limpando todas as criaturas.");
+			creaturesLock.EnterWriteLock();
+			
             creatures.Clear();
+			
+			creaturesLock.ExitWriteLock();
         }
     }
 }

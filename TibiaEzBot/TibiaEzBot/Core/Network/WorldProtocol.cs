@@ -1255,6 +1255,7 @@ namespace TibiaEzBot.Core.Network
         private bool parsePlayerCancelAttack(NetworkMessage incMsg, NetworkMessage outMsg)
         {
             //no data
+			GlobalVariables.SetAttackId(0);
             return true;
         }
 
@@ -1672,6 +1673,18 @@ namespace TibiaEzBot.Core.Network
             }
         }
 
+		public void SendAttackCreature(uint creatureId)
+		{
+			lock(serverSendMsg)
+			{
+				serverSendMsg.Reset();
+				serverSendMsg.AddByte(0xA1);
+				serverSendMsg.AddUInt32(creatureId);
+				send();
+				GlobalVariables.SetAttackId(creatureId);
+			}
+		}
+		
         public void SendLookItem(Position pos, ushort itemId, byte stackPos)
         {
             lock (serverSendMsg)
