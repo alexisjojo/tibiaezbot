@@ -1,0 +1,11 @@
+﻿<Window x:Class="TibiaEzBot.View.DelayWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:src="clr-namespace:TibiaEzBot.View.Controls"
+    Title="Delay" Height="123" Width="227" Topmost="True" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+    <Grid Height="75">
+        <Button HorizontalAlignment="Right" Margin="0,0,12,8" Name="uxAddButton" Width="75" Height="23" VerticalAlignment="Bottom" Click="uxAddButton_Click">Add</Button>
+        <Label Name="label1" Height="28" VerticalAlignment="Top" Margin="0,7,85,0">Delay (ms):</Label>
+        <src:NumberTextBox MaxLength="6" Margin="71,7,12,0" x:Name="uxDelayNumericTextBox" Height="23" VerticalAlignment="Top" />
+    </Grid>
+</Window>

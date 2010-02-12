@@ -1,0 +1,263 @@
+﻿<Window x:Class="TibiaEzBot.View.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:src="clr-namespace:TibiaEzBot.View.Controls"
+    Title="TibiaEzBot" SizeToContent="WidthAndHeight" 
+    WindowStartupLocation="CenterScreen" Topmost="True"
+    ResizeMode="NoResize" Width="300" Height="1661"
+    ShowInTaskbar="False" Opacity="1" 
+    Loaded="Window_Loaded" 
+    Closing="Window_Closing"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <DataTemplate x:Key="WaypointsDataTemplate">
+            <StackPanel>
+                <TextBlock FontSize="12" Text="{Binding Path=Description}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="White" Offset="0"></GradientStop>
+            <GradientStop Color="DarkGray" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <StackPanel Name="uxMainStackPanel" MinWidth="260" MaxWidth="260" >
+        <Menu Name="mainMenu" SnapsToDevicePixels="False" ClipToBounds="False" Background="Transparent">
+            <MenuItem Name="uxMain" Header="Main">
+                <MenuItem Name="uxLoadMenuItem" Header="Load..." Click="uxLoadMenuItem_Click"/>
+                <MenuItem Name="uxSaveMenuItem" Header="Save..." Click="uxSaveMenuItem_Click" />
+                <Separator/>
+                <MenuItem Name="uxShowTitleMenuItem" IsChecked="True" Header="Show Title" IsCheckable="True" />
+                <MenuItem Name="uxShowNameMenuItem" Header="Show Name" IsCheckable="True" />
+                <Separator/>
+                <MenuItem Header="Advanced Options">
+                    <MenuItem Name="uxAutoOpenBodysMenuItem" Header="Auto Open Bodys" IsCheckable="True" IsChecked="True" />
+                    <MenuItem Name="uxEatFoodFromBodysMenuItem" Header="Eat Food from Bodys" IsCheckable="True" IsChecked="True" />
+                </MenuItem>
+                <Separator/>
+                <MenuItem Name="uxExitMenuItem" Header="Exit" Click="uxExitMenuItem_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Name="uxOptionsMenuItem" Header="Options">
+                <MenuItem Name="uxAlarmsMenuItem" IsCheckable="False" Header="Alarms">
+                    <MenuItem Name="uxDisconnectedAlarmMenuItem" Header="Disconnected" IsCheckable="True" />
+                    <MenuItem Name="uxGmDetectedAlarmMenuItem" Header="GM Detected" IsCheckable="True" />
+                    <MenuItem Name="uxPlayerOnScreenAlarmMenuItem" Header="Player on Screen" IsCheckable="True" />
+                    <MenuItem Name="uxMovedAlarmMenuItem" Header="Moved" IsCheckable="True" />
+                    <MenuItem Name="uxFullManaAlarmMenuItem" Header="Full Mana" IsCheckable="True" />
+                    <MenuItem Name="uxLowHealthAlarmMenuItem" Header="Low Health..." IsCheckable="True" />
+                    <MenuItem Name="uxLowCapacityAlarmMenuItem" Header="Low Capacity..." IsCheckable="True" />
+                    <Separator/>
+                    <MenuItem Name="uxMessageAlarmMenuItem" Header="Message" IsCheckable="True" />
+                    <MenuItem Name="uxPrivateMessageAlarmMenuItem" Header="Private Message" IsCheckable="True" />
+                </MenuItem>
+                <MenuItem Name="uxLogoutMenuItem" Header="Logout" IsCheckable="False">
+                    <MenuItem Name="uxGmDetectedLogoutMenuItem" Header="GM Detected" IsCheckable="True" />
+                    <MenuItem Name="uxPlayerOnScreenLogoutMenuItem" Header="Player on Screen" IsCheckable="True" />
+                    <MenuItem Name="uxMovedLogoutMenuItem" Header="Moved" IsCheckable="True" />
+                </MenuItem>
+                <Separator/>
+                <MenuItem Name="uxGmSafeMenuItem" Header="GM Safe" IsCheckable="True" />
+                <MenuItem Name="uxPlayerSafeMenuItem" Header="Player Safe" IsCheckable="True" />
+                <Separator/>
+                <MenuItem Name="uxAntiIdleMenuItem" Header="Anti-Idle" IsCheckable="True" />
+                <MenuItem Name="uxFramerateMenuItem" Header="Framerate" IsCheckable="True" />
+                <MenuItem Name="uxXRayMenuItem" Header="XRay" IsCheckable="True" />
+                <Separator/>
+                <MenuItem Name="uxMonstersMenuItem" Header="Monsters..." IsCheckable="False" />
+            </MenuItem>
+            <MenuItem Name="uxToolsMenuItem" Header="Tools">
+                <MenuItem Name="uxAutoFishingMenuItem" Header="Auto Fishing" IsCheckable="True" />
+                <MenuItem Name="uxCaveHuntingMenuItem" Header="Cave Hunting" Tag="showCaveHuntOptions" IsCheckable="True" Checked="uxCaveHuntingMenuItem_Checked" Unchecked="uxCaveHuntingMenuItem_Unchecked" />
+                <MenuItem  Name="uxAutoLoginMenuItem" IsCheckable="True" Header="Auto Login" Checked="uxAutoLoginMenuItem_Checked" Unchecked="uxAutoLoginMenuItem_Unchecked"/>
+                <Separator/>
+                <MenuItem Name="uxSelfHealingMenuItem" Header="Self Healing" Tag="showHealOptions" IsCheckable="True" Checked="uxSelfHealingMenuItem_Checked" Unchecked="uxSelfHealingMenuItem_Unchecked" />
+                <MenuItem Name="uxCurePoisonMenuItem" Header="Cure Poison" IsCheckable="False">
+                    <MenuItem Name="uxUseRuneMenuItem" Header="Use Rune" IsCheckable="True" />
+                    <MenuItem Name="uxUseSpellMenuItem" Header="Use Spell" IsCheckable="True" />
+                </MenuItem>
+                <Separator/>
+                <MenuItem Name="uxManaRestoreMenuItem" Header="Mana Restore" Tag="showManaRestoreOptions" IsCheckable="True" Checked="uxManaRestoreMenuItem_Checked" Unchecked="uxManaRestoreMenuItem_Unchecked" />
+                <MenuItem Name="uxManaTrainingMenuItem" Header="Mana Training" IsCheckable="True" />
+                <Separator/>
+                <MenuItem Name="uxRuneMakerMenuItem" Header="Rune Maker" IsCheckable="True"/>
+                <MenuItem Name="uxEnchantSpearsMenuItem" Header="Enchant Spears" IsCheckable="True" />
+            </MenuItem>
+            <MenuItem Name="uxAboutMenuItem" Header="About">
+                <MenuItem Name="uxHelpMenuItem" Header="Help" />
+                <MenuItem Name="uxAboutTibiaEzBotMenuItem" Header="About TibiaEzBot" />
+            </MenuItem>
+        </Menu>
+        <Expander Margin="3,3,3,3" Name="uxAutoLoginExpander" Header="Auto Login" IsExpanded="True" BorderBrush="Gray">
+            <Grid Height="241">
+                <Label Margin="4,4,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Login:</Label>
+                <Label Margin="3,25,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Password:</Label>
+                <Label Margin="3,47,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Character Name:</Label>
+                <TextBox Height="20" Margin="108,5,10,0" Name="uxLoginTextBox" Tag="loginAccount" VerticalAlignment="Top" />
+                <TextBox Height="20" Margin="108,27,10,0" Name="uxPasswordTextBox" Tag="loginPassword" VerticalAlignment="Top" />
+                <TextBox Margin="108,49,10,0" Name="uxCharacterNameTextBox" Height="20" Tag="loginCharacterName" VerticalAlignment="Top"/>
+                <CheckBox Height="16" Margin="0,80,14,0" Name="uxAutoLoginEnableCheckBox" Tag="loginEnable" VerticalAlignment="Top" HorizontalAlignment="Right" Width="56" Checked="uxAutoLoginEnableCheckBox_Checked" Unchecked="uxAutoLoginEnableCheckBox_Unchecked">Enable</CheckBox>
+                <Label Margin="6,99,0,116" HorizontalAlignment="Left" Width="111">Open Backpacks:</Label>
+                <ListView Height="91" Margin="9,0,10,24" Name="uxOpenBackpacksListView" SelectionMode="Single" VerticalAlignment="Bottom">
+                    <ListView.ContextMenu>
+                        <ContextMenu Name="uxOpenBackpacksContextMenu">
+                            <MenuItem Header="Add..." Name="uxOpenBackpacksAddContextMenuItem"/>
+                            <Separator />
+                            <MenuItem Header="Remove" Name="uxOpenBackpacksRemoveContextMenuItem"/>
+                            <MenuItem Header="Clear" Name="uxOpenBackpacksClearContextMenuItem"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                </ListView>
+                <CheckBox Height="16" HorizontalAlignment="Right" Margin="0,0,14,4" Name="uxAutoOpenBackpacksCheckBox" VerticalAlignment="Bottom" Width="56">Enable</CheckBox>
+            </Grid>
+        </Expander>
+        <Expander Margin="3,3,3,3" Header="Self Healing" Name="uxSelfHealingExpander" IsExpanded="True" BorderBrush="Gray">
+            <Grid Height="150">
+                <TabControl Margin="9,8,10,8" SelectedIndex="0">
+                    <TabItem Header="Spells">
+                        <Grid>
+                            <Label Margin="0,6,0,66.04" HorizontalAlignment="Left" Width="103">Minimum Health:</Label>
+                            <Label Margin="0,28,0,44" HorizontalAlignment="Left" Width="103">Mana Needed:</Label>
+                            <Label Margin="0,50,0,21" HorizontalAlignment="Left" Width="103">Spell:
+                            </Label>
+                            <CheckBox Height="16" Margin="0,82,6,0" Name="uxHealingSpellsEnableCheckBox" Tag="magicHealEnable" VerticalAlignment="Top" HorizontalAlignment="Right" Width="56" Checked="uxHealingSpellsEnableCheckBox_Checked" Unchecked="uxHealingSpellsEnableCheckBox_Unchecked" >Enable</CheckBox>
+                            <src:NumberTextBox Margin="0,8,17,0" x:Name="uxHealingSpellsMinimumTextBox" Tag="magicHealMinimumHealth" HorizontalAlignment="Right" Width="89" Height="20" VerticalAlignment="Top" MaxLength="5"/>
+                            <src:NumberTextBox HorizontalAlignment="Right" Margin="0,0,17,52.723" x:Name="uxHealingSpellsManaTextBox" Tag="magicHealMana" Width="89" Height="20" VerticalAlignment="Bottom" MaxLength="5" />
+                            <TextBox HorizontalAlignment="Right" Margin="0,0,17,30.725" Name="uxHealingSpellTextBox" Tag="magicHealSpell" Width="89" Height="19.999" VerticalAlignment="Bottom" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Potions and Runes">
+                        <Grid>
+                            <Label Margin="0,6,120,0" Height="25" VerticalAlignment="Top" Width="101">Minimum Health:</Label>
+                            <Label Margin="0,28,120,0" Width="101" Height="25" VerticalAlignment="Top">Type:</Label>
+                            <ComboBox Margin="104,29.777,11,0" Name="uxTypePotionComboBox" Tag="potionHealItem" SelectedIndex="0" Height="19.723" VerticalAlignment="Top">
+                                <ComboBoxItem Tag="266">HP</ComboBoxItem>
+                                <ComboBoxItem Tag="236">Strong HP</ComboBoxItem>
+                                <ComboBoxItem Tag="239">Great HP</ComboBoxItem>
+                                <ComboBoxItem Tag="7643">Ultimate HP</ComboBoxItem>
+                                <ComboBoxItem Tag="3152">IH</ComboBoxItem>
+                                <ComboBoxItem Tag="3160">UH</ComboBoxItem>
+                            </ComboBox>
+                            <src:NumberTextBox Height="20" Margin="104,8,11,0" x:Name="uxMinimumHealthPotionTextBox" MaxLength="5" Tag="potionHealMinimumHealth" VerticalAlignment="Top" />
+                            <CheckBox Margin="0,82,6,0" Name="uxHealingPotionsEnableCheckBox" Tag="potionHealEnable" HorizontalAlignment="Right" Width="56" Height="16" VerticalAlignment="Top" Checked="uxHealingPotionsEnableCheckBox_Checked" Unchecked="uxHealingPotionsEnableCheckBox_Unchecked" >Enable</CheckBox>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Expander>
+        <Expander Margin="3,3,3,3" Header="Cave Hunting" Name="uxCaveHuntingExpander" BorderBrush="Gray" IsExpanded="True">
+            <Grid Height="504">
+                <Label Height="28" Margin="9,0,123,0" VerticalAlignment="Top">Waypoints:</Label>
+                
+                <ListView SelectionMode="Single" 
+                          ItemTemplate="{StaticResource WaypointsDataTemplate}" 
+                          Height="126" Margin="9,23,10,0" Name="uxWaypointsListView"
+                          VerticalAlignment="Top">
+                    <ListView.ContextMenu>
+                        <ContextMenu Name="uxWaypointsContextMenu">
+                            <MenuItem Name="uxWaypointsAddContextMenuItem" Header="Add">
+                                <MenuItem Name="uxWaypointsGroundContextMenuItem" Header="Ground" Click="uxWaypointsGroundContextMenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Name="uxWaypointsHoleContextMenuItem" Header="Hole" Click="uxWaypointsHoleContextMenuItem_Click"/>
+                                <MenuItem Name="uxWaypointsRopeContextMenuItem" Header="Rope" Click="uxWaypointsRopeContextMenuItem_Click"/>
+                                <MenuItem Name="uxWaypointsShovelContextMenuItem" Header="Shovel"/>
+                                <MenuItem Name="uxWaypointsLadderContextMenuItem" Header="Ladder" Click="uxWaypointsLadderContextMenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Name="uxWaypointsRampContextMenuItem" Header="Ramp">
+                                    <MenuItem Name="uxWaypointsUpContextMenuItem" Header="Up"/>
+                                    <MenuItem Name="uxWaypointsDownContextMenuItem" Header="Down"/>
+                                    <MenuItem Name="uxWaypointsLeftContextMenuItem" Header="Left"/>
+                                    <MenuItem Name="uxWaypointsRightContextMenuItem" Header="Right"/>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Name="uxWaypointsUpStairsContextMenuItem" Header="Up Stairs" Click="uxWaypointsUpStairsContextMenuItem_Click"/>
+                                <MenuItem Name="uxWaypointsDownStairsContextMenuItem" Header="Down Stairs" Click="uxWaypointsDownStairsContextMenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Name="uxWaypointsDelayContextMenuItem" Header="Delay" Click="uxWaypointsDelayContextMenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Name="uxWaypointsSayContextMenuItem" Header="Say" Click="uxWaypointsSayContextMenuItem_Click" />
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Name="uxWaypointsMoveUpContextMenuItem" Header="Move Up"/>
+                            <MenuItem Name="uxWaypointsMoveDownContextMenuItem" Header="Move Down"/>
+                            <Separator/>
+                            <MenuItem Name="uxWaypointsRemoveContextMenuItem" Header="Remove" Click="uxWaypointsRemoveContextMenuItem_Click"/>
+                            <MenuItem Name="uxWaypointsClearContextMenuItem" Header="Clear" Click="uxWaypointsClearContextMenuItem_Click"/>
+                            <Separator/>
+                            <MenuItem Name="uxWaypointsSaveContextMenuItem" Header="Save..."/>
+                            <MenuItem Name="uxWaypointsLoadContextMenuItem" Header="Load..."/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    
+                </ListView>
+                
+                <CheckBox Height="16" Margin="20,155,14,0" Name="uxFollowWaypointsCheckBox" VerticalAlignment="Top" Checked="uxFollowWaypointsCheckBox_Checked" Unchecked="uxFollowWaypointsCheckBox_Unchecked">Follow Waypoints</CheckBox>
+                <Label Margin="9,176,0,0" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120">AutoLoot:</Label>
+                <ListView SelectionMode="Single" Margin="9,198,10,0" Name="uxAutoLootListView" Height="126" VerticalAlignment="Top" BorderThickness="1" Grid.Column="1">
+                    <ListView.ContextMenu>
+                        <ContextMenu Name="uxAutoLootContextMenu">
+                            <MenuItem Name="uxAutoLootAddItemContextMenuItem" Header="Add..."/>
+                            <Separator/>
+                            <MenuItem Name="uxAutoLootRemoveItemContextMenuItem" Header="Remove"/>
+                            <MenuItem Name="uxAutoLootClearContextMenuItem" Header="Clear"/>
+                            <Separator/>
+                            <MenuItem Name="uxAutoLootSaveContextMenuItem" Header="Save..."/>
+                            <MenuItem Name="uxAutoLootLoadContextMenuItem" Header="Load..."/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Item" Width="40" DisplayMemberBinding="{Binding Path=IdToString}">
+                            </GridViewColumn>
+                            <GridViewColumn Header="Loot?" Width="40" DisplayMemberBinding="{Binding Path=LootToString}"/>
+                            <GridViewColumn Header="Container" Width="60" DisplayMemberBinding="{Binding Path=ContainerToString}"/>
+                            <GridViewColumn Header="Comment" Width="90" DisplayMemberBinding="{Binding Path=Comment}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <CheckBox Height="16" Margin="20,330,14,0" Name="uxAutoLootCheckBox" VerticalAlignment="Top">Looting</CheckBox>
+                <CheckBox Height="16" Margin="20,363,14,0" Name="uxAttackMonstersCheckBox" Tag="attackMonsters" VerticalAlignment="Top" Checked="uxAttackMonstersCheckBox_Checked" Unchecked="uxAttackMonstersCheckBox_Unchecked" >Attack Monsters</CheckBox>
+                <CheckBox Height="16" Margin="32,380,14,0" Name="uxTargetAllCheckBox" Tag="targetAllMonsters" VerticalAlignment="Top" IsEnabled="False" Checked="uxTargetAllCheckBox_Checked" Unchecked="uxTargetAllCheckBox_Unchecked" >Target All</CheckBox>
+                <CheckBox Height="16" Margin="20,0,14,22" Name="uxUseElvenhairRopeCheckBox" VerticalAlignment="Bottom">Use Elvenhair Rope</CheckBox>
+                <CheckBox Height="16" Margin="20,0,14,5" Name="uxUseLightShovelCheckBox" VerticalAlignment="Bottom">Use Light Shovel</CheckBox>
+                <CheckBox Height="16" Margin="20,397,10,0" Name="uxAttackPlayersCheckBox" IsEnabled="False" VerticalAlignment="Top">Attack Players</CheckBox>
+                <CheckBox Height="16" Margin="20,426,10,0" Name="uxReffilAmmunitionCheckBox" VerticalAlignment="Top">Refill Ammunition</CheckBox>
+                <CheckBox Height="16" Margin="20,443,112,0" Name="uxKeepDiagonalCheckBox" VerticalAlignment="Top">Keep Diagonal</CheckBox>
+            </Grid>
+        </Expander>
+        <Expander Margin="3,3,3,3" Header="Mana Restore" Name="uxManaRestoreExpander" BorderBrush="Gray" IsExpanded="True">
+            <Grid Height="76">
+                <Label Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104" Margin="3,2,0,0">Minimum Mana:</Label>
+                <src:NumberTextBox Height="20" Margin="108,2,10,0" x:Name="uxMinimumManaRestoreTextBox" Tag="restoreManaMinimum" VerticalAlignment="Top" />
+                <Label Margin="3,23,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Use:</Label>
+                <ComboBox Margin="108,24,66,32" Name="uxItemManaRestoreCheckBox" Tag="restoreManaItem">
+                    <ComboBoxItem IsSelected="True" Tag="268">MP</ComboBoxItem>
+                    <ComboBoxItem Tag="237">SMP</ComboBoxItem>
+                    <ComboBoxItem Tag="238">GMP</ComboBoxItem>
+                </ComboBox>
+                <CheckBox HorizontalAlignment="Right" Margin="0,0,14,4" Name="uxManaRestoreEnableCheckBox" Tag="restoreManaEnable" Width="56" Height="16" VerticalAlignment="Bottom" Checked="uxManaRestoreEnableCheckBox_Checked" Unchecked="uxManaRestoreEnableCheckBox_Unchecked">Enable</CheckBox>
+            </Grid>
+        </Expander>
+        <Expander Margin="3,3,3,3" Header="Mana Training" Name="uxManaTrainingExpander" IsExpanded="True" BorderBrush="Gray">
+            <Grid Height="76">
+                <Label Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104" Margin="3,2,0,0">Minimum Mana:</Label>
+                <TextBox Height="20" Margin="108,4,10,0" Name="uxManaTrainingMinimumManaTextBox" VerticalAlignment="Top" />
+                <Label HorizontalAlignment="Left" Margin="3,24,0,0" Width="101" Height="22" VerticalAlignment="Top">Spell:</Label>
+                <CheckBox Height="16" HorizontalAlignment="Right" Margin="0,0,14,4" Name="uxManaTrainingEnableCheckBox" VerticalAlignment="Bottom" Width="56">Enable</CheckBox>
+                <TextBox Margin="108,26,10,0" Name="uxManaTrainingSpellTextBox" Height="20" VerticalAlignment="Top" />
+            </Grid>
+        </Expander>
+        <Expander Header="Rune Maker" Name="uxRuneMakerExpander" Margin="3,3,3,3" IsExpanded="True" BorderBrush="Gray">
+            <Grid Height="102">
+                <Label Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104" Margin="3,2,0,0">Minimum Mana:</Label>
+                <TextBox Height="20" Margin="108,4,10,0" Name="uxMinimumManaRuneMakerTextBox" VerticalAlignment="Top" />
+                <Label HorizontalAlignment="Left" Margin="3,24,0,0" Width="101" Height="22" VerticalAlignment="Top">Spell:</Label>
+                <CheckBox Height="16" HorizontalAlignment="Right" Margin="0,0,10,4" Name="uxEnableRuneMakerCheckBox" VerticalAlignment="Bottom" Width="74">Make Runes</CheckBox>
+                <TextBox Margin="108,26,10,0" Name="uxSpellRuneMakerTextBox" Height="20" VerticalAlignment="Top" />
+                <CheckBox Height="16" Name="uxEatFoodCheckBox" Margin="93,0,90,4" VerticalAlignment="Bottom">Eat Food</CheckBox>
+                <Label Margin="3,46,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98">Soul Needed:</Label>
+                <TextBox Height="20" Margin="0,48,10,0" Name="uxSoulNeededRuneMakerTextBox" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134" />
+            </Grid>
+        </Expander>
+    </StackPanel>
+</Window>

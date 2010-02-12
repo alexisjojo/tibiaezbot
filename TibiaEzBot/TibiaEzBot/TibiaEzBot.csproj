@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1BCAD764-EA59-49DF-81DE-47E1FB420E31}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TibiaEzBot</RootNamespace>
+    <AssemblyName>TibiaEzBot</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60DC8134-EBA5-43B8-BCC9-BB4BC16C2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetZone>LocalIntranet</TargetZone>
+    <GenerateManifests>false</GenerateManifests>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>false</MapFileExtensions>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Core\ActionControl.cs" />
+    <Compile Include="Core\Addresses\BattleList.cs" />
+    <Compile Include="Core\Addresses\Client.cs" />
+    <Compile Include="Core\Addresses\Container.cs" />
+    <Compile Include="Core\Addresses\ContextMenus.cs" />
+    <Compile Include="Core\Addresses\Creature.cs" />
+    <Compile Include="Core\Addresses\DatItem.cs" />
+    <Compile Include="Core\Addresses\DrawItem.cs" />
+    <Compile Include="Core\Addresses\DrawSkin.cs" />
+    <Compile Include="Core\Addresses\Hotkey.cs" />
+    <Compile Include="Core\Addresses\Map.cs" />
+    <Compile Include="Core\Addresses\Player.cs" />
+    <Compile Include="Core\Addresses\TextDisplay.cs" />
+    <Compile Include="Core\Addresses\Vip.cs" />
+    <Compile Include="Core\Configs\ConfigManager.cs" />
+    <Compile Include="Core\Constants\Enums.cs" />
+    <Compile Include="Core\Entities\Client.cs" />
+    <Compile Include="Core\Entities\Client.InputHelper.cs" />
+    <Compile Include="Core\Entities\Client.LoginHelper.cs" />
+    <Compile Include="Core\Entities\Client.MemoryHelper.cs" />
+    <Compile Include="Core\Entities\Client.WindowHelper.cs" />
+    <Compile Include="Core\Entities\Container.cs" />
+    <Compile Include="Core\Entities\Containers.cs" />
+    <Compile Include="Core\Entities\Creature.cs" />
+    <Compile Include="Core\Entities\Creatures.cs" />
+    <Compile Include="Core\Entities\Inventory.cs" />
+    <Compile Include="Core\Entities\Item.cs" />
+    <Compile Include="Core\Entities\LoginServer.cs" />
+    <Compile Include="Core\Entities\Map.cs" />
+    <Compile Include="Core\Entities\Objects.cs" />
+    <Compile Include="Core\Entities\ObjectType.cs" />
+    <Compile Include="Core\Entities\Outfit.cs" />
+    <Compile Include="Core\Entities\Player.cs" />
+    <Compile Include="Core\Entities\Position.cs" />
+    <Compile Include="Core\Entities\Thing.cs" />
+    <Compile Include="Core\Entities\Tile.cs" />
+    <Compile Include="Core\Entities\Waypoint.cs" />
+    <Compile Include="Core\GlobalVariables.cs" />
+    <Compile Include="Core\Hotkeys.cs" />
+    <Compile Include="Core\Kernel.cs" />
+    <Compile Include="Core\Logger.cs" />
+    <Compile Include="Core\Modules\AutoAttack.cs" />
+    <Compile Include="Core\Modules\AutoHeal.cs" />
+    <Compile Include="Core\Modules\AutoLogin.cs" />
+    <Compile Include="Core\Modules\AutoLoot.cs" />
+    <Compile Include="Core\Modules\AutoManaRestore.cs" />
+    <Compile Include="Core\Modules\AutoWalk.cs" />
+    <Compile Include="Core\Modules\IModule.cs" />
+    <Compile Include="Core\Modules\Module.cs" />
+    <Compile Include="Core\Network\AdlerChecksum.cs" />
+    <Compile Include="Core\Network\LoginProtocol.cs" />
+    <Compile Include="Core\Network\NetworkMessage.cs" />
+    <Compile Include="Core\Network\Protocol.cs" />
+    <Compile Include="Core\Network\Proxy.cs" />
+    <Compile Include="Core\Network\ProxyBase.cs" />
+    <Compile Include="Core\Network\Rsa.cs" />
+    <Compile Include="Core\Network\WorldProtocol.cs" />
+    <Compile Include="Core\Network\Xtea.cs" />
+    <Compile Include="Core\Util\BigInteger.cs" />
+    <Compile Include="Core\Util\Calculate.cs" />
+    <Compile Include="Core\Util\FixedCollector.cs" />
+    <Compile Include="Core\Util\Hooks.cs" />
+    <Compile Include="Core\Util\KeyboardHook.cs" />
+    <Compile Include="Core\Util\Memory.cs" />
+    <Compile Include="Core\Util\Structures.cs" />
+    <Compile Include="Core\Util\TreeHelper.cs" />
+    <Compile Include="Core\Util\WinApi.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClientChooser.xaml.cs">
+      <DependentUpon>ClientChooser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\NumberTextBox.cs" />
+    <Compile Include="View\DelayWindow.xaml.cs">
+      <DependentUpon>DelayWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SayWindow.xaml.cs">
+      <DependentUpon>SayWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinConsole.cs" />
+    <Compile Include="Core\Game.cs" />
+    <Compile Include="Core\PathFinder.cs" />
+    <Compile Include="Core\Entities\CreatureData.cs" />
+    <Compile Include="Core\Constants\CreaturesData.cs" />
+    <Compile Include="Core\Constants\CreatureLists.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
+    <None Include="Resources\Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="View\ClientChooser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DelayWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SayWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
