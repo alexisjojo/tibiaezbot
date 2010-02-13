@@ -33,7 +33,7 @@ namespace TibiaEzBot.Core.Entities
 
         public bool Equals(Position pos)
         {
-            return pos.X == X && pos.Y == Y && pos.Z == Z;
+            return pos != null && pos.X == X && pos.Y == Y && pos.Z == Z;
         }
 
         public Position Clone()
@@ -45,16 +45,6 @@ namespace TibiaEzBot.Core.Entities
         {
             return (int)(X + Y + Z);
         }
-
-    	public static bool operator ==(Position pos1, Position pos2)
-    	{
-            return pos1.Equals(pos2);
-    	}
-    	
-    	public static bool operator !=(Position pos1, Position pos2)
-    	{
-            return !pos1.Equals(pos2);
-    	}
     	
     	public override String ToString()
     	{
