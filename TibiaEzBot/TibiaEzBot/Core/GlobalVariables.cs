@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using TibiaEzBot.Core.Entities;
 using TibiaEzBot.Core.Constants;
+using System.Threading;
 
 namespace TibiaEzBot.Core
 {
@@ -27,6 +28,10 @@ namespace TibiaEzBot.Core
 		private static uint[,] playerSkills = new uint[(int)Skills.Last, (int)SkillAttribute.Last];
 
         private static ushort playerIcons;
+
+        private static ReaderWriterLockSlim updateLock = new ReaderWriterLockSlim();
+
+        public static ReaderWriterLockSlim GetUpdateLock() { return updateLock; }
 
 		public static Position GetPlayerPosition() { return playerPosition; }
 		public static void SetPlayerPosition(Position position) { playerPosition = position; }

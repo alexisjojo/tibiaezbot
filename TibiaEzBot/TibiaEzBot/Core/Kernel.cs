@@ -138,6 +138,10 @@ namespace TibiaEzBot.Core
                         }
                         catch (Exception e)
                         {
+                            //Garante que não vamos travar o lock
+                            if (GlobalVariables.GetUpdateLock().IsReadLockHeld)
+                                GlobalVariables.GetUpdateLock().ExitReadLock();
+
                             Logger.Log(String.Format("Falha ao executar o modulo {0}. Erro: {1}", module.GetName(), e.ToString()), LogType.ERROR);
                         }
                     }

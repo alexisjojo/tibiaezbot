@@ -445,6 +445,8 @@ namespace TibiaEzBot.Core.Network
                 return false;
             }
 
+            Game.GetInstance().OnTileAddThing(tile, thing);
+
             return true;
         }
 
@@ -915,12 +917,12 @@ namespace TibiaEzBot.Core.Network
             outMsg.AddByte(effect);
 
             Tile tile = Map.GetInstance().GetTile(effectPos);
-            if (tile == null)
-            {
-                Logger.Log("Magic effect - !tile", LogType.ERROR);
-                return false;
-            }
-
+            //Quando uma magia for lançada em um tile que não temos oque devemos fazer?
+            //if (tile == null)
+            //{
+            //    Logger.Log("Magic effect - !tile", LogType.ERROR);
+            //    return false;
+            //}
             //tile->addEffect(effect);
             return true;
         }
@@ -1255,7 +1257,7 @@ namespace TibiaEzBot.Core.Network
         private bool parsePlayerCancelAttack(NetworkMessage incMsg, NetworkMessage outMsg)
         {
             //no data
-			GlobalVariables.SetAttackId(0);
+            GlobalVariables.SetAttackId(0);
             return true;
         }
 
@@ -1292,6 +1294,8 @@ namespace TibiaEzBot.Core.Network
                 case SpeechType.RuleViolationReport:
                     uint time = incMsg.GetUInt32();
                     outMsg.AddUInt32(time);
+                    break;
+                case SpeechType.Private:
                     break;
                 default:
                     Logger.Log("Tipo de mensagem desconhecido.", LogType.ERROR);
@@ -1673,18 +1677,18 @@ namespace TibiaEzBot.Core.Network
             }
         }
 
-		public void SendAttackCreature(uint creatureId)
-		{
-			lock(serverSendMsg)
-			{
-				serverSendMsg.Reset();
-				serverSendMsg.AddByte(0xA1);
-				serverSendMsg.AddUInt32(creatureId);
-				send();
-				GlobalVariables.SetAttackId(creatureId);
-			}
-		}
-		
+        public void SendAttackCreature(uint creatureId)
+        {
+            lock (serverSendMsg)
+            {
+                serverSendMsg.Reset();
+                serverSendMsg.AddByte(0xA1);
+                serverSendMsg.AddUInt32(creatureId);
+                send();
+                GlobalVariables.SetAttackId(creatureId);
+            }
+        }
+
         public void SendLookItem(Position pos, ushort itemId, byte stackPos)
         {
             lock (serverSendMsg)
@@ -1752,6 +1756,15 @@ namespace TibiaEzBot.Core.Network
                 serverSendMsg.AddByte(stackPos);
                 serverSendMsg.AddUInt32(creatureId);
                 send();
+            }
+        }
+
+        public void SendCancelMove()
+        {
+            lock (serverSendMsg)
+            {
+                serverSendMsg.Reset();
+                serverSendMsg.AddByte(0xBE);
             }
         }
 

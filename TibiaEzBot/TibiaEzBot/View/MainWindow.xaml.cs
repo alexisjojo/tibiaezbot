@@ -15,7 +15,7 @@ using System.Reflection;
 using System.IO;
 using Microsoft.Win32;
 using System.Threading;
-using TibiaEzBot.Configs;
+using TibiaEzBot.Core.Configs;
 using TibiaEzBot.Core;
 
 namespace TibiaEzBot.View
@@ -147,7 +147,7 @@ namespace TibiaEzBot.View
 
             if (openFileDialog.ShowDialog(this) == true)
             {
-                Configs.ConfigManager.LoadConfig(this, openFileDialog.FileName);
+                TibiaEzBot.Core.Configs.ConfigManager.LoadConfig(this, openFileDialog.FileName);
             }
         }
 
@@ -158,7 +158,7 @@ namespace TibiaEzBot.View
 
             if (saveFileDialog.ShowDialog(this) == true)
             {
-                Configs.ConfigManager.SaveConfig(this, saveFileDialog.FileName);
+                TibiaEzBot.Core.Configs.ConfigManager.SaveConfig(this, saveFileDialog.FileName);
             }
         }
 
@@ -358,11 +358,13 @@ namespace TibiaEzBot.View
 
         private void uxFollowWaypointsCheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            uxWaypointsListView.ContextMenu = null;
             Core.Kernel.GetInstance().AutoWalk.Enable = true;
         }
 
         private void uxFollowWaypointsCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
+            uxWaypointsListView.ContextMenu = uxWaypointsContextMenu;
             Core.Kernel.GetInstance().AutoWalk.Enable = false;
         }
 
@@ -410,6 +412,57 @@ namespace TibiaEzBot.View
             }
         }
 
+
+        private void uxWaypointsMoveUpContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.MoveUp(uxWaypointsListView.SelectedIndex);
+        }
+
+        private void uxWaypointsMoveDownContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.MoveDown(uxWaypointsListView.SelectedIndex);
+        }
+
+        private void uxWaypointsUpContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(TibiaEzBot.Core.Constants.Direction.Up);
+        }
+
+        private void uxWaypointsDownContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(TibiaEzBot.Core.Constants.Direction.Down);
+        }
+
+        private void uxWaypointsLeftContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(TibiaEzBot.Core.Constants.Direction.Left);
+        }
+
+        private void uxWaypointsRightContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(TibiaEzBot.Core.Constants.Direction.Right);
+        }
+
+        private void uxUseLightShovelCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.UseLightShovel = true;
+        }
+
+        private void uxUseLightShovelCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.UseLightShovel = false;
+        }
+
+        private void uxUseElvenhairRopeCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.UseElvenhairRope = true;
+        }
+
+        private void uxUseElvenhairRopeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Core.Kernel.GetInstance().AutoWalk.UseElvenhairRope = false;            
+        }
+
         private void AutoWalk_CurrentWaypointChanged(object sender, EventArgs e)
         {
             if (Dispatcher.Thread != Thread.CurrentThread)
@@ -428,7 +481,30 @@ namespace TibiaEzBot.View
 
         private void uxWaypointsRemoveContextMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            Core.Kernel.GetInstance().AutoWalk.Remove(uxWaypointsListView.SelectedIndex);
+        }
 
+        private void uxWaypointsSaveContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML Files|*.xml";
+
+            if (saveFileDialog.ShowDialog(this) == true)
+            {
+                TibiaEzBot.Core.Configs.ConfigManager.SaveWaypoints(saveFileDialog.FileName);
+            }
+        }
+
+        private void uxWaypointsLoadContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "XML Files|*.xml";
+            openFileDialog.Multiselect = false;
+
+            if (openFileDialog.ShowDialog(this) == true)
+            {
+                TibiaEzBot.Core.Configs.ConfigManager.LoadWaypoints(openFileDialog.FileName);
+            }
         }
         #endregion
     }

@@ -36,8 +36,17 @@ namespace TibiaEzBot.Core.Entities
         public override uint GetOrder() { return 4; }
 
         public bool IsPlayer() { return !IsMonster() && !IsNpc(); }
-        public bool IsMonster() { return CreatureLists.AllCreatures.ContainsKey(name); }
-        public bool IsNpc() { return  id > 0x40000000; }
+
+        public bool IsMonster() {
+            if (!String.IsNullOrEmpty(name) && name.Length > 0)
+            {
+                return Char.IsLower(name[0]);
+            }
+
+            return false;
+        }
+
+        public bool IsNpc() { return  id >= 0x40000000; }
 
         public String GetName() { return name; }
         public void SetName(String name) { this.name = name; }
@@ -53,11 +62,26 @@ namespace TibiaEzBot.Core.Entities
 			return PathFinder.GetInstance().FindPath(GlobalVariables.GetPlayerPosition(), GetPosition(), true);
 		}
 
+        public bool IsInScreen()
+        {
+            Position playerPos = GlobalVariables.GetPlayerPosition();
+
+            if (position == null || playerPos == null ||
+                playerPos.Z != position.Z)
+            {
+                return false;
+            }
+
+            int x = (int)(position.X - (playerPos.X - 8));
+            int y = (int)(position.Y - (playerPos.Y - 6));
+
+            return x > 0 && x < 16 && y > 0 && y < 12;
+        }
+
         public override String ToString()
         {
             return "Name: " + name;
         }
-
 
         public void SetTurnDirection(Direction direction)
         {

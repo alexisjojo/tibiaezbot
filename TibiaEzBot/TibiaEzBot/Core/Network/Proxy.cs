@@ -490,6 +490,11 @@ namespace TibiaEzBot.Core.Network
                         bool sendModified = true;
                         clientSendMsg.Reset();
 
+
+                        //DateTime t = DateTime.UtcNow;
+
+                        GlobalVariables.GetUpdateLock().EnterWriteLock();
+
                         try
                         {
                             while (serverRecvMsg.Position < msgSize)
@@ -521,6 +526,10 @@ namespace TibiaEzBot.Core.Network
                             Logger.Log("Erro ao efetuar o parse das mensagens do servidor. Erro: " + e.ToString());
                             sendModified = false;
                         }
+
+                        GlobalVariables.GetUpdateLock().ExitWriteLock();
+
+                        //Console.WriteLine("Tempo para processar a msg: " + (DateTime.UtcNow - t).TotalMilliseconds);
 
                         if (sendModified && clientSendMsg.Length > clientSendMsg.GetPacketHeaderSize() + 2)
                         {

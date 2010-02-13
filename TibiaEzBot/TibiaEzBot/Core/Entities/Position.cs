@@ -19,8 +19,19 @@ namespace TibiaEzBot.Core.Entities
 		
 		public bool IsAdjacentTo(Position pos)
         {
+            return pos != null && pos.Z == Z &&
+                Math.Max(Math.Abs(X - pos.X), Math.Abs(Y - pos.Y)) <= 1;
+        }
 
-            return pos.Z == Z && Math.Max(Math.Abs(X - pos.X), Math.Abs(Y - pos.Y)) <= 1;
+        public int DistanceTo(Position pos)
+        {
+            if (pos == null || pos.Z != Z)
+                return int.MaxValue;
+
+            uint xDist = X - pos.X;
+            uint yDist = Y - pos.Y;
+
+            return (int)Math.Sqrt(xDist * xDist + yDist * yDist);
         }
 
         public override bool Equals(object obj)
@@ -33,7 +44,8 @@ namespace TibiaEzBot.Core.Entities
 
         public bool Equals(Position pos)
         {
-            return pos != null && pos.X == X && pos.Y == Y && pos.Z == Z;
+            return pos != null && 
+                pos.X == X && pos.Y == Y && pos.Z == Z;
         }
 
         public Position Clone()
