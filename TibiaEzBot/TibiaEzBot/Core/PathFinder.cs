@@ -39,6 +39,7 @@ namespace TibiaEzBot.Core
             for (int y = 0; y < mGrid.GetUpperBound(1); y++)
                 for (int x = 0; x < mGrid.GetUpperBound(0); x++)
                     mGrid[x, y] = 0;
+
         }
         #endregion
 

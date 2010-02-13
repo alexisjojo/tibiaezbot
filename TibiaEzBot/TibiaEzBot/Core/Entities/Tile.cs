@@ -28,11 +28,12 @@ namespace TibiaEzBot.Core.Entities
         {
             ground = null;
 
-            foreach (Thing thing in objects)
+            for (int i = 0; i < objects.Count; i++)
             {
-                if (thing is Creature)
+                Thing thing = objects[i];
+                if(thing is Creature)
                 {
-                    ((Creature)thing).SetPosition(new Position(0, 0, 0));
+                    thing.GetCreature().SetPosition(new Position(0,0,0));
                 }
             }
 
@@ -290,13 +291,15 @@ namespace TibiaEzBot.Core.Entities
 		    
 			if(GetGround() != null)
 				color = GetGround().GetMapColor();
-			
-			foreach(Thing thing in objects)
-			{
-				if(thing.GetMapColor() > 0)
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                Thing thing = objects[i];
+
+                if(thing != null && thing.GetMapColor() > 0)
 					color = thing.GetMapColor();
-			}
-			
+            }
+
 		    return color;
 		}
     }

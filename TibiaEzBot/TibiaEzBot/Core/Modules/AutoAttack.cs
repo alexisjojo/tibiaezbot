@@ -31,35 +31,35 @@ namespace TibiaEzBot.Core.Modules
 			}
 		}
 
-        public override void Run()
-        {
-            if (TargetAll && !GlobalVariables.IsAttacking())
-            {
-                Creature creature = null;
+        //public override void Run()
+        //{
+        //    if (TargetAll && !GlobalVariables.IsAttacking())
+        //    {
+        //        Creature creature = null;
 
-                //Se estivermos coletando o loot nao podemos atacar qualquer creatura.
-                if (Kernel.getInstance().AutoLoot.IsLooting)
-                {
-					Position playerPosition = GlobalVariables.GetPlayerPosition();
+        //        //Se estivermos coletando o loot nao podemos atacar qualquer creatura.
+        //        if (Kernel.getInstance().AutoLoot.IsLooting)
+        //        {
+        //            Position playerPosition = GlobalVariables.GetPlayerPosition();
 					
-					Creatures.GetInstance().CreaturesLock.EnterReadLock();
+        //            Creatures.GetInstance().CreaturesLock.EnterReadLock();
 					
-                    creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault(
-                        delegate(TibiaEzBot.Core.Entities.Creature cr) { return cr.Location.DistanceTo(playerLocation) <= 1; });
+        //            creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault(
+        //                delegate(TibiaEzBot.Core.Entities.Creature cr) { return cr.Location.DistanceTo(playerLocation) <= 1; });
 					
-					Creatures.GetInstance().CreaturesLock.ExitReadLock();
-                }
-                else
-                {
-                    creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault();
-                }
+        //            Creatures.GetInstance().CreaturesLock.ExitReadLock();
+        //        }
+        //        else
+        //        {
+        //            creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault();
+        //        }
 
-                if (creature != null)
-                {
-                    Kernel.getInstance().Player.Attack((uint)creature.Id);
-                }
-            }
-        }
+        //        if (creature != null)
+        //        {
+        //            Kernel.getInstance().Player.Attack((uint)creature.Id);
+        //        }
+        //    }
+        //}
 
         public override bool RunOnlyConnected()
         {

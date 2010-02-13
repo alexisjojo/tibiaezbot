@@ -18,19 +18,21 @@ namespace TibiaEzBot.Core.Entities
             return instance;
         }
 
-        private Creatures() { }
+        private Creatures()
+        {
+        }
 
         private IDictionary<uint, Creature> creatures = new Dictionary<uint, Creature>();
-		private ReaderWriterLockSlim creaturesLock;
-		
-		public ReaderWriterLockSlim CreaturesLock { get { return creaturesLock; } }
-		
+        private ReaderWriterLockSlim creaturesLock = new ReaderWriterLockSlim();
+
+        public ReaderWriterLockSlim CreaturesLock { get { return creaturesLock; } }
+
         public Creature AddCreature(uint id)
         {
             Creature cr = new Creature(id);
-			creaturesLock.EnterWriteLock();
-			creatures.Add(id, cr);
-			creaturesLock.ExitWriteLock();
+            creaturesLock.EnterWriteLock();
+            creatures.Add(id, cr);
+            creaturesLock.ExitWriteLock();
             return cr;
         }
 
@@ -49,22 +51,22 @@ namespace TibiaEzBot.Core.Entities
 
         public void RemoveCreature(uint id)
         {
-			creaturesLock.EnterWriteLock();
-            
-			if (creatures.ContainsKey(id))
+            creaturesLock.EnterWriteLock();
+
+            if (creatures.ContainsKey(id))
                 creatures.Remove(id);
-			
-			creaturesLock.ExitWriteLock();
-        }	
+
+            creaturesLock.ExitWriteLock();
+        }
 
         public void Clear()
         {
             Logger.Log("Limpando todas as criaturas.");
-			creaturesLock.EnterWriteLock();
-			
+            creaturesLock.EnterWriteLock();
+
             creatures.Clear();
-			
-			creaturesLock.ExitWriteLock();
+
+            creaturesLock.ExitWriteLock();
         }
     }
 }
