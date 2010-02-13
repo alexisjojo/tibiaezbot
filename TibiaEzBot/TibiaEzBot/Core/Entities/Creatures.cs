@@ -23,16 +23,11 @@ namespace TibiaEzBot.Core.Entities
         }
 
         private IDictionary<uint, Creature> creatures = new Dictionary<uint, Creature>();
-        private ReaderWriterLockSlim creaturesLock = new ReaderWriterLockSlim();
-
-        public ReaderWriterLockSlim CreaturesLock { get { return creaturesLock; } }
 
         public Creature AddCreature(uint id)
         {
             Creature cr = new Creature(id);
-            creaturesLock.EnterWriteLock();
             creatures.Add(id, cr);
-            creaturesLock.ExitWriteLock();
             return cr;
         }
 
@@ -44,6 +39,37 @@ namespace TibiaEzBot.Core.Entities
             return null;
         }
 
+        public ICollection<Creature> GetCreatures()
+        {
+            return creatures.Values;
+        }
+
+        public IEnumerable<Creature> GetFloorPlayers()
+        {
+            Position playerPos = GlobalVariables.GetPlayerPosition();
+
+            foreach (Creature cr in creatures.Values)
+            {
+                if (cr.GetPosition() != null &&
+                    cr.IsPlayer() && cr.GetPosition().Z == playerPos.Z)
+                {
+                    yield return cr;
+                }
+            }
+        }
+
+        public IEnumerable<Creature> GetScreenMonsters()
+        {
+            foreach (Creature cr in creatures.Values)
+            {
+                if (cr.GetPosition() != null && 
+                    cr.IsMonster() && cr.IsInScreen())
+                {
+                    yield return cr;
+                }
+            }
+        }
+
         public Creature GetPlayer()
         {
             return GetCreature(GlobalVariables.GetPlayerId());
@@ -51,22 +77,14 @@ namespace TibiaEzBot.Core.Entities
 
         public void RemoveCreature(uint id)
         {
-            creaturesLock.EnterWriteLock();
-
             if (creatures.ContainsKey(id))
                 creatures.Remove(id);
-
-            creaturesLock.ExitWriteLock();
         }
 
         public void Clear()
         {
             Logger.Log("Limpando todas as criaturas.");
-            creaturesLock.EnterWriteLock();
-
             creatures.Clear();
-
-            creaturesLock.ExitWriteLock();
         }
     }
 }

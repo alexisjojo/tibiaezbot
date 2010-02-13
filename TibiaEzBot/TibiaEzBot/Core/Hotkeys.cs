@@ -33,6 +33,7 @@ namespace TibiaEzBot.Core
                 else
                 {
                     Kernel.GetInstance().Paused = true;
+                    Game.GetInstance().CancelMove();
                     Logger.Log("Kernel paused.");
                 }
 

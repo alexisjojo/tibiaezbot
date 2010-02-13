@@ -28,5 +28,20 @@ namespace TibiaEzBot.View
             this.DialogResult = true;
             this.Close();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            uxWordsTextBox.PreviewKeyDown += new KeyEventHandler(uxWordsTextBox_PreviewKeyDown);
+            uxWordsTextBox.Focus();
+        }
+
+        private void uxWordsTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                uxAddButton_Click(this, new RoutedEventArgs());
+                e.Handled = true;
+            }
+        }
     }
 }

@@ -16,50 +16,57 @@ namespace TibiaEzBot.Core.Modules
         {
         }
 
-		public void OnReceiveCreatureSquare(Creature creature)
-		{
-			if(Enable && !GlobalVariables.IsAttacking() && creature.GetSquare() == SquareColor.Black)
-			{
-				if(creature.IsMonster())
-				{
-					if(!Kernel.GetInstance().AutoLoot.IsLooting ||
-					   GlobalVariables.GetPlayerPosition().IsAdjacentTo(creature.GetPosition()))
-					{
-						Game.GetInstance().Attack(creature);
-					}
-				}
-			}
-		}
+        public void OnReceiveCreatureSquare(Creature creature)
+        {
+            if (Enable && !GlobalVariables.IsAttacking() && creature.GetSquare() == SquareColor.Black)
+            {
+                if (creature.IsMonster())
+                {
+                    if (!Kernel.GetInstance().AutoLoot.IsLooting ||
+                       GlobalVariables.GetPlayerPosition().IsAdjacentTo(creature.GetPosition()))
+                    {
+                        Game.GetInstance().Attack(creature);
+                    }
+                }
+            }
+        }
 
-        //public override void Run()
-        //{
-        //    if (TargetAll && !GlobalVariables.IsAttacking())
-        //    {
-        //        Creature creature = null;
+        public override void Run()
+        {
+            if (TargetAll && !GlobalVariables.IsAttacking())
+            {
+                Creature creature = null;
 
-        //        //Se estivermos coletando o loot nao podemos atacar qualquer creatura.
-        //        if (Kernel.getInstance().AutoLoot.IsLooting)
-        //        {
-        //            Position playerPosition = GlobalVariables.GetPlayerPosition();
-					
-        //            Creatures.GetInstance().CreaturesLock.EnterReadLock();
-					
-        //            creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault(
-        //                delegate(TibiaEzBot.Core.Entities.Creature cr) { return cr.Location.DistanceTo(playerLocation) <= 1; });
-					
-        //            Creatures.GetInstance().CreaturesLock.ExitReadLock();
-        //        }
-        //        else
-        //        {
-        //            creature = Kernel.getInstance().BattleList.GetScreenMonsters().FirstOrDefault();
-        //        }
+                GlobalVariables.GetUpdateLock().EnterReadLock();
 
-        //        if (creature != null)
-        //        {
-        //            Kernel.getInstance().Player.Attack((uint)creature.Id);
-        //        }
-        //    }
-        //}
+                Position playerPosition = GlobalVariables.GetPlayerPosition();
+                //Se estivermos coletando o loot nao podemos atacar qualquer creatura.
+                if (Kernel.GetInstance().AutoLoot.IsLooting)
+                {
+                    creature = (from c in Creatures.GetInstance().GetScreenMonsters()
+                                where c.GetPosition().IsAdjacentTo(playerPosition)
+                                select c).FirstOrDefault();
+                }
+                else
+                {
+                    creature = (from c in Creatures.GetInstance().GetScreenMonsters()
+                                where c.IsReachable() && Creatures.GetInstance().
+                                    GetFloorPlayers().FirstOrDefault(delegate(Creature cr)
+                                    {
+                                        return cr.GetPosition().IsAdjacentTo(c.GetPosition());
+                                    }) == null
+                                orderby c.GetPosition().DistanceTo(playerPosition)
+                                select c).FirstOrDefault();
+                }
+
+                GlobalVariables.GetUpdateLock().ExitReadLock();
+
+                if (creature != null)
+                {
+                    Game.GetInstance().Attack(creature);
+                }
+            }
+        }
 
         public override bool RunOnlyConnected()
         {
@@ -74,7 +81,7 @@ namespace TibiaEzBot.Core.Modules
         public override string GetName()
         {
             return "AutoAttack";
-        }  
+        }
 
     }
 }

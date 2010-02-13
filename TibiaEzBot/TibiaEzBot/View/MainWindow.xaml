@@ -88,7 +88,7 @@
                 <MenuItem Name="uxAboutTibiaEzBotMenuItem" Header="About TibiaEzBot" />
             </MenuItem>
         </Menu>
-        <Expander Margin="3,3,3,3" Name="uxAutoLoginExpander" Header="Auto Login" IsExpanded="True" BorderBrush="Gray">
+        <Expander Margin="3,3,3,3" Name="uxAutoLoginExpander" Header="Auto Login" Tag="autoLoginExpander" IsExpanded="True" BorderBrush="Gray">
             <Grid Height="241">
                 <Label Margin="4,4,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Login:</Label>
                 <Label Margin="3,25,0,0" HorizontalAlignment="Left" Width="101" Height="25" VerticalAlignment="Top">Password:</Label>
@@ -111,7 +111,7 @@
                 <CheckBox Height="16" HorizontalAlignment="Right" Margin="0,0,14,4" Name="uxAutoOpenBackpacksCheckBox" VerticalAlignment="Bottom" Width="56">Enable</CheckBox>
             </Grid>
         </Expander>
-        <Expander Margin="3,3,3,3" Header="Self Healing" Name="uxSelfHealingExpander" IsExpanded="True" BorderBrush="Gray">
+        <Expander Margin="3,3,3,3" Header="Self Healing" Name="uxSelfHealingExpander" Tag="selfHealingExpander" IsExpanded="True" BorderBrush="Gray">
             <Grid Height="150">
                 <TabControl Margin="9,8,10,8" SelectedIndex="0">
                     <TabItem Header="Spells">
@@ -145,7 +145,7 @@
                 </TabControl>
             </Grid>
         </Expander>
-        <Expander Margin="3,3,3,3" Header="Cave Hunting" Name="uxCaveHuntingExpander" BorderBrush="Gray" IsExpanded="True">
+        <Expander Margin="3,3,3,3" Header="Cave Hunting" Name="uxCaveHuntingExpander" Tag="caveHuntingExpander" BorderBrush="Gray" IsExpanded="True">
             <Grid Height="504">
                 <Label Height="28" Margin="9,0,123,0" VerticalAlignment="Top">Waypoints:</Label>
                 
@@ -164,10 +164,10 @@
                                 <MenuItem Name="uxWaypointsLadderContextMenuItem" Header="Ladder" Click="uxWaypointsLadderContextMenuItem_Click"/>
                                 <Separator/>
                                 <MenuItem Name="uxWaypointsRampContextMenuItem" Header="Ramp">
-                                    <MenuItem Name="uxWaypointsUpContextMenuItem" Header="Up"/>
-                                    <MenuItem Name="uxWaypointsDownContextMenuItem" Header="Down"/>
-                                    <MenuItem Name="uxWaypointsLeftContextMenuItem" Header="Left"/>
-                                    <MenuItem Name="uxWaypointsRightContextMenuItem" Header="Right"/>
+                                    <MenuItem Name="uxWaypointsUpContextMenuItem" Header="Up" Click="uxWaypointsUpContextMenuItem_Click"/>
+                                    <MenuItem Name="uxWaypointsDownContextMenuItem" Header="Down" Click="uxWaypointsDownContextMenuItem_Click"/>
+                                    <MenuItem Name="uxWaypointsLeftContextMenuItem" Header="Left" Click="uxWaypointsLeftContextMenuItem_Click"/>
+                                    <MenuItem Name="uxWaypointsRightContextMenuItem" Header="Right" Click="uxWaypointsRightContextMenuItem_Click"/>
                                 </MenuItem>
                                 <Separator/>
                                 <MenuItem Name="uxWaypointsUpStairsContextMenuItem" Header="Up Stairs" Click="uxWaypointsUpStairsContextMenuItem_Click"/>
@@ -178,14 +178,14 @@
                                 <MenuItem Name="uxWaypointsSayContextMenuItem" Header="Say" Click="uxWaypointsSayContextMenuItem_Click" />
                             </MenuItem>
                             <Separator/>
-                            <MenuItem Name="uxWaypointsMoveUpContextMenuItem" Header="Move Up"/>
-                            <MenuItem Name="uxWaypointsMoveDownContextMenuItem" Header="Move Down"/>
+                            <MenuItem Name="uxWaypointsMoveUpContextMenuItem" Header="Move Up" Click="uxWaypointsMoveUpContextMenuItem_Click"/>
+                            <MenuItem Name="uxWaypointsMoveDownContextMenuItem" Header="Move Down" Click="uxWaypointsMoveDownContextMenuItem_Click"/>
                             <Separator/>
                             <MenuItem Name="uxWaypointsRemoveContextMenuItem" Header="Remove" Click="uxWaypointsRemoveContextMenuItem_Click"/>
                             <MenuItem Name="uxWaypointsClearContextMenuItem" Header="Clear" Click="uxWaypointsClearContextMenuItem_Click"/>
                             <Separator/>
-                            <MenuItem Name="uxWaypointsSaveContextMenuItem" Header="Save..."/>
-                            <MenuItem Name="uxWaypointsLoadContextMenuItem" Header="Load..."/>
+                            <MenuItem Name="uxWaypointsSaveContextMenuItem" Header="Save..." Click="uxWaypointsSaveContextMenuItem_Click"/>
+                            <MenuItem Name="uxWaypointsLoadContextMenuItem" Header="Load..." Click="uxWaypointsLoadContextMenuItem_Click"/>
                         </ContextMenu>
                     </ListView.ContextMenu>
                     
@@ -218,14 +218,14 @@
                 <CheckBox Height="16" Margin="20,330,14,0" Name="uxAutoLootCheckBox" VerticalAlignment="Top">Looting</CheckBox>
                 <CheckBox Height="16" Margin="20,363,14,0" Name="uxAttackMonstersCheckBox" Tag="attackMonsters" VerticalAlignment="Top" Checked="uxAttackMonstersCheckBox_Checked" Unchecked="uxAttackMonstersCheckBox_Unchecked" >Attack Monsters</CheckBox>
                 <CheckBox Height="16" Margin="32,380,14,0" Name="uxTargetAllCheckBox" Tag="targetAllMonsters" VerticalAlignment="Top" IsEnabled="False" Checked="uxTargetAllCheckBox_Checked" Unchecked="uxTargetAllCheckBox_Unchecked" >Target All</CheckBox>
-                <CheckBox Height="16" Margin="20,0,14,22" Name="uxUseElvenhairRopeCheckBox" VerticalAlignment="Bottom">Use Elvenhair Rope</CheckBox>
-                <CheckBox Height="16" Margin="20,0,14,5" Name="uxUseLightShovelCheckBox" VerticalAlignment="Bottom">Use Light Shovel</CheckBox>
-                <CheckBox Height="16" Margin="20,397,10,0" Name="uxAttackPlayersCheckBox" IsEnabled="False" VerticalAlignment="Top">Attack Players</CheckBox>
+                <CheckBox Height="16" Margin="20,0,14,22" Name="uxUseElvenhairRopeCheckBox" Tag="useElvenHairHope" Checked="uxUseElvenhairRopeCheckBox_Checked" Unchecked="uxUseElvenhairRopeCheckBox_Unchecked" VerticalAlignment="Bottom">Use Elvenhair Rope</CheckBox>
+                <CheckBox Height="16" Margin="20,0,14,5" Name="uxUseLightShovelCheckBox" Tag="useLightShovel" Checked="uxUseLightShovelCheckBox_Checked" Unchecked="uxUseLightShovelCheckBox_Unchecked" VerticalAlignment="Bottom">Use Light Shovel</CheckBox>
+                <CheckBox Height="16" Margin="20,397,10,0" Name="uxAttackPlayersCheckBox" Tag="attackPlayers" IsEnabled="False" VerticalAlignment="Top">Attack Players</CheckBox>
                 <CheckBox Height="16" Margin="20,426,10,0" Name="uxReffilAmmunitionCheckBox" VerticalAlignment="Top">Refill Ammunition</CheckBox>
-                <CheckBox Height="16" Margin="20,443,112,0" Name="uxKeepDiagonalCheckBox" VerticalAlignment="Top">Keep Diagonal</CheckBox>
+                <CheckBox Height="16" Margin="20,443,112,0" Name="uxKeepDiagonalCheckBox" Tag="keepDiagonal" VerticalAlignment="Top">Keep Diagonal</CheckBox>
             </Grid>
         </Expander>
-        <Expander Margin="3,3,3,3" Header="Mana Restore" Name="uxManaRestoreExpander" BorderBrush="Gray" IsExpanded="True">
+        <Expander Margin="3,3,3,3" Header="Mana Restore" Name="uxManaRestoreExpander" Tag="manaRestoreExpander" BorderBrush="Gray" IsExpanded="True">
             <Grid Height="76">
                 <Label Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104" Margin="3,2,0,0">Minimum Mana:</Label>
                 <src:NumberTextBox Height="20" Margin="108,2,10,0" x:Name="uxMinimumManaRestoreTextBox" Tag="restoreManaMinimum" VerticalAlignment="Top" />
@@ -238,7 +238,7 @@
                 <CheckBox HorizontalAlignment="Right" Margin="0,0,14,4" Name="uxManaRestoreEnableCheckBox" Tag="restoreManaEnable" Width="56" Height="16" VerticalAlignment="Bottom" Checked="uxManaRestoreEnableCheckBox_Checked" Unchecked="uxManaRestoreEnableCheckBox_Unchecked">Enable</CheckBox>
             </Grid>
         </Expander>
-        <Expander Margin="3,3,3,3" Header="Mana Training" Name="uxManaTrainingExpander" IsExpanded="True" BorderBrush="Gray">
+        <Expander Margin="3,3,3,3" Header="Mana Training" Name="uxManaTrainingExpander" Tag="manaTrainingExpander" IsExpanded="True" BorderBrush="Gray">
             <Grid Height="76">
                 <Label Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104" Margin="3,2,0,0">Minimum Mana:</Label>
                 <TextBox Height="20" Margin="108,4,10,0" Name="uxManaTrainingMinimumManaTextBox" VerticalAlignment="Top" />

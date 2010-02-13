@@ -30,6 +30,7 @@ namespace TibiaEzBot.Core
 		{
 			if(kernel.WorldProtocol != null)
 			{
+                CancelMove();
 				kernel.WorldProtocol.SendAttackCreature(creature.GetId());
 				kernel.Client.Memory.WriteUInt32(Addresses.Player.TargetID, creature.GetId());
 				return true;
@@ -37,6 +38,21 @@ namespace TibiaEzBot.Core
 			
 			return true;
 		}
+
+        public bool CancelMove()
+        {
+            if (kernel.WorldProtocol != null)
+            {
+                kernel.WorldProtocol.SendCancelMove();
+                GlobalVariables.SetAttackId(0);
+
+                var Memory = kernel.Client.Memory;
+                Memory.WriteUInt32(Addresses.Player.GoToX, 0);
+                return true;
+            }
+
+            return false;
+        }
 		
 		public bool Say(String words, SpeechType type) 
 		{
@@ -159,5 +175,9 @@ namespace TibiaEzBot.Core
 		{
 			kernel.AutoAttack.OnReceiveCreatureSquare(creature);
 		}
+
+        public void OnTileAddThing(Tile tile, Thing thing)
+        {
+        }
 	}
 }

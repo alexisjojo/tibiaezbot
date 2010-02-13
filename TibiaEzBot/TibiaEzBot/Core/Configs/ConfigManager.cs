@@ -9,8 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml.Linq;
 using TibiaEzBot.Core.Util;
+using TibiaEzBot.Core.Entities;
 
-namespace TibiaEzBot.Configs
+namespace TibiaEzBot.Core.Configs
 {
     public static class ConfigManager
     {
@@ -25,6 +26,16 @@ namespace TibiaEzBot.Configs
 
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteStartElement("Configurations");
+
+                xmlWriter.WriteComment("Specific configurations");
+
+                if (Core.Kernel.GetInstance().AutoWalk.WaypointsFile != null)
+                {
+                    xmlWriter.WriteStartElement("Configuration");
+                    xmlWriter.WriteAttributeString("type", "WaypointsFile");
+                    xmlWriter.WriteAttributeString("value", Core.Kernel.GetInstance().AutoWalk.WaypointsFile);
+                    xmlWriter.WriteEndElement();
+                }
 
                 xmlWriter.WriteComment("Generic configurations");
 
@@ -76,8 +87,17 @@ namespace TibiaEzBot.Configs
                     }
                 }
 
-                xmlWriter.WriteComment("Specific configurations");
-
+                foreach (Expander expander in TreeHelper.FindChildren<Expander>(mainWindow))
+                {
+                    if (expander.Tag != null)
+                    {
+                        xmlWriter.WriteStartElement("Configuration");
+                        xmlWriter.WriteAttributeString("type", "Expander");
+                        xmlWriter.WriteAttributeString("id", (string)expander.Tag);
+                        xmlWriter.WriteAttributeString("value", expander.IsExpanded.ToString());
+                        xmlWriter.WriteEndElement();
+                    }
+                }
 
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteEndDocument();
@@ -107,6 +127,13 @@ namespace TibiaEzBot.Configs
                 {
                     switch (config.Attribute("type").Value)
                     {
+                        case "WaypointsFile":
+                            String path = config.Attribute("value").Value;
+                            if (File.Exists(path))
+                            {
+                                LoadWaypoints(path);
+                            }
+                            break;
                         case "TextBox":
                             TextBox textBox = TreeHelper.FindChildren<TextBox>(mainWindow).FirstOrDefault(
                                 delegate(TextBox tb)
@@ -157,6 +184,18 @@ namespace TibiaEzBot.Configs
                                 menuItem.IsChecked = Boolean.Parse(config.Attribute("value").Value);
                             }
                             break;
+                        case "Expander":
+                            Expander expander = TreeHelper.FindChildren<Expander>(mainWindow).FirstOrDefault(
+                                delegate(Expander ex)
+                                {
+                                    return ex.Tag != null && ((string)ex.Tag).Equals(config.Attribute("id").Value);
+                                });
+
+                            if (expander != null)
+                            {
+                                expander.IsExpanded = Boolean.Parse(config.Attribute("value").Value);
+                            }
+                            break;
                     }
                 }
 
@@ -171,5 +210,120 @@ namespace TibiaEzBot.Configs
 
             return false;
         }
+
+        public static bool LoadWaypoints(String fileName)
+        {
+            try
+            {
+                Core.Kernel.GetInstance().AutoWalk.Clear();
+
+                var waypoints = from w in XElement.Load(fileName).Elements("Waypoint")
+                                select w;
+
+                foreach (var waypoint in waypoints)
+                {
+                    WaypointType type = (WaypointType)int.Parse(waypoint.Attribute("type").Value);
+                    switch (type)
+                    {
+                        case WaypointType.WAYPOINT_GROUND:
+                        case WaypointType.WAYPOINT_HOLE:
+                        case WaypointType.WAYPOINT_LADDER:
+                        case WaypointType.WAYPOINT_RAMP:
+                        case WaypointType.WAYPOINT_ROPE:
+                        case WaypointType.WAYPOINT_STAIR_UP:
+                        case WaypointType.WAYPOINT_START_DOWN:
+                            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(new WalkWaypoint(
+                                new Position(uint.Parse(waypoint.Attribute("x").Value),
+                                    uint.Parse(waypoint.Attribute("y").Value),
+                                    uint.Parse(waypoint.Attribute("z").Value)), type));
+                            break;
+                        case WaypointType.WAYPOINT_SAY:
+                            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(waypoint.Attribute("words").Value,
+                                (SayType)byte.Parse(waypoint.Attribute("sayType").Value));
+                            break;
+                        case WaypointType.WAYPOINT_DELAY:
+                            Core.Kernel.GetInstance().AutoWalk.AddWaypoint(int.Parse(waypoint.Attribute("type").Value));
+                            break;
+                    }
+                }
+
+                Core.Kernel.GetInstance().AutoWalk.WaypointsFile = fileName;
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("Load waypoints error: " + e.Message,
+                    "Error", System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+            }
+
+            return false;
+        }
+
+        public static bool SaveWaypoints(String fileName)
+        {
+            try
+            {
+                FileStream stream = new FileStream(fileName, FileMode.Create);
+                XmlTextWriter xmlWriter = new XmlTextWriter(stream, null);
+                xmlWriter.Formatting = Formatting.Indented;
+                xmlWriter.Indentation = 4;
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("Waypoints");
+
+                foreach (Waypoint waypoint in Core.Kernel.GetInstance().AutoWalk.Waypoints)
+                {
+                    switch (waypoint.WaypointType)
+                    {
+                        case WaypointType.WAYPOINT_GROUND:
+                        case WaypointType.WAYPOINT_HOLE:
+                        case WaypointType.WAYPOINT_LADDER:
+                        case WaypointType.WAYPOINT_RAMP:
+                        case WaypointType.WAYPOINT_ROPE:
+                        case WaypointType.WAYPOINT_STAIR_UP:
+                        case WaypointType.WAYPOINT_START_DOWN:
+                            xmlWriter.WriteStartElement("Waypoint");
+                            xmlWriter.WriteAttributeString("type", ((int)waypoint.WaypointType).ToString());
+                            xmlWriter.WriteAttributeString("x", waypoint.GetWalkWaypoint().Position.X.ToString());
+                            xmlWriter.WriteAttributeString("y", waypoint.GetWalkWaypoint().Position.Y.ToString());
+                            xmlWriter.WriteAttributeString("z", waypoint.GetWalkWaypoint().Position.Z.ToString());
+                            xmlWriter.WriteEndElement();
+                            break;
+                        case WaypointType.WAYPOINT_SAY:
+                            xmlWriter.WriteStartElement("Waypoint");
+                            xmlWriter.WriteAttributeString("type", ((int)waypoint.WaypointType).ToString());
+                            xmlWriter.WriteAttributeString("words", waypoint.GetSayWaypoint().Words);
+                            xmlWriter.WriteAttributeString("sayType", ((byte)waypoint.GetSayWaypoint().SayType).ToString());
+                            xmlWriter.WriteEndElement();
+                            break;
+                        case WaypointType.WAYPOINT_DELAY:
+                            xmlWriter.WriteStartElement("Waypoint");
+                            xmlWriter.WriteAttributeString("type", ((int)waypoint.WaypointType).ToString());
+                            xmlWriter.WriteAttributeString("time", waypoint.GetWaitWaypoint().Delay.ToString());
+                            xmlWriter.WriteEndElement();
+                            break;
+                    }
+                }
+
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Flush();
+                stream.Close();
+
+                Core.Kernel.GetInstance().AutoWalk.WaypointsFile = fileName;
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("Save waypoints error: " + e.Message,
+                    "Error", System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+            }
+
+            return false;
+        }
+
     }
 }

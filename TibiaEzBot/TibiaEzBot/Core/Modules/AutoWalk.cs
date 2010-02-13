@@ -5,6 +5,7 @@ using System.Text;
 using TibiaEzBot.Core.Entities;
 using System.Collections.ObjectModel;
 using TibiaEzBot.Core.Util;
+using TibiaEzBot.Core.Constants;
 
 namespace TibiaEzBot.Core.Modules
 {
@@ -12,6 +13,7 @@ namespace TibiaEzBot.Core.Modules
     {
         private bool enable;
         private DateTime delayStart;
+        private bool delayStartSet;
 
         public event EventHandler CurrentWaypointChanged;
 
@@ -66,7 +68,7 @@ namespace TibiaEzBot.Core.Modules
                             IncrementWaypoint();
                         else
                         {
-                                Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
+                            Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
                         }
                         break;
                     case WaypointType.WAYPOINT_RAMP:
@@ -77,7 +79,7 @@ namespace TibiaEzBot.Core.Modules
                             IncrementWaypoint();
                         else
                         {
-                                Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
+                            Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
                         }
                         break;
                     case WaypointType.WAYPOINT_ROPE:
@@ -85,11 +87,14 @@ namespace TibiaEzBot.Core.Modules
                             IncrementWaypoint();
                         else if (GlobalVariables.GetPlayerPosition().IsAdjacentTo(waypoint.GetWalkWaypoint().Position))
                         {
-
+                            if (UseElvenhairRope)
+                                Game.GetInstance().UseItemOn(646, waypoint.GetWalkWaypoint().Position);
+                            else
+                                Game.GetInstance().UseItemOn(3003, waypoint.GetWalkWaypoint().Position);
                         }
                         else
                         {
-                                Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
+                            Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
                         }
                         break;
                     case WaypointType.WAYPOINT_LADDER:
@@ -102,17 +107,20 @@ namespace TibiaEzBot.Core.Modules
                         }
                         else
                         {
-                                Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
+                            Game.GetInstance().Walk(waypoint.GetWalkWaypoint().Position);
                         }
                         break;
                     case WaypointType.WAYPOINT_DELAY:
-                        if (delayStart != DateTime.MinValue && (DateTime.UtcNow - delayStart).Milliseconds >= waypoint.GetWaitWaypoint().Delay)
+                        if (delayStartSet && (DateTime.UtcNow - delayStart).TotalMilliseconds >= waypoint.GetWaitWaypoint().Delay)
                         {
-                            delayStart = DateTime.MinValue;
+                            delayStartSet = false;
                             IncrementWaypoint();
                         }
-                        else if (delayStart == DateTime.MinValue)
+                        else if (!delayStartSet)
+                        {
                             delayStart = DateTime.UtcNow;
+                            delayStartSet = true;
+                        }
 
                         break;
                     case WaypointType.WAYPOINT_SAY:
@@ -160,6 +168,34 @@ namespace TibiaEzBot.Core.Modules
             }
         }
 
+        public void AddWaypoint(Direction direction)
+        {
+            Position playerPos = GlobalVariables.GetPlayerPosition().Clone();
+            switch (direction)
+            {
+                case Direction.Down:
+                    playerPos.Y++;
+                    break;
+                case Direction.Left:
+                    playerPos.X--;
+                    break;
+                case Direction.Up:
+                    playerPos.Y--;
+                    break;
+                case Direction.Right:
+                    playerPos.X++;
+                    break;
+            }
+
+            Waypoints.Add(new WalkWaypoint(playerPos, WaypointType.WAYPOINT_RAMP));
+        }
+
+        public void AddWaypoint(Waypoint waypoint)
+        {
+            if (!Enable)
+                Waypoints.Add(waypoint);
+        }
+
         public void AddWaypoint(String words, SayType type)
         {
             if (!Enable)
@@ -172,10 +208,37 @@ namespace TibiaEzBot.Core.Modules
                 Waypoints.Add(new WaitWaypoint(delay));
         }
 
+        public void MoveUp(int index)
+        {
+            if (!Enable)
+            {
+                if (index > 0 && index < Waypoints.Count)
+                    Waypoints.Move(index, index - 1);
+            }
+        }
+
+        public void MoveDown(int index)
+        {
+            if (!Enable)
+            {
+                if (index >= 0 && index < Waypoints.Count - 1)
+                    Waypoints.Move(index, index + 1);
+            }
+        }
+
+        public void Remove(int index)
+        {
+            if (!Enable)
+                Waypoints.RemoveAt(index);
+        }
+
         public void Clear()
         {
             if (!Enable)
+            {
+                CurrentWaypoint = 0;
                 Waypoints.Clear();
+            }
         }
 
         public override string GetName()

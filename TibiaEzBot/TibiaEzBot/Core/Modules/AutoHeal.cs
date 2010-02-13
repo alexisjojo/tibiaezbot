@@ -39,6 +39,8 @@ namespace TibiaEzBot.Core.Modules
         {
             ActionControl actionControl = Kernel.GetInstance().ActionControl;
 
+            GlobalVariables.GetUpdateLock().EnterReadLock();
+
             if (PotionEnable && GlobalVariables.GetPlayerStatus(PlayerStatus.Health) <= PotionMinimumHealth)
             {
                 if (actionControl.CanPerformAction(ActionControlType.USE_HEAL_POTION) &&
@@ -56,6 +58,8 @@ namespace TibiaEzBot.Core.Modules
                 	actionControl.ActionPerformed(ActionControlType.USE_HEAL_SPELL);
                 }
             }
+
+            GlobalVariables.GetUpdateLock().ExitReadLock();
         }
 
     }

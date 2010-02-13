@@ -165,8 +165,6 @@ namespace TibiaEzBot.Core.Entities
             {
                 Creature cr = (Creature)thing;
                 cr.SetPosition(this.GetPosition());
-
-                Logger.Log("Creatura: " + cr.GetName() + " é reachable: " + cr.IsReachable());
             }
 
             return true;
