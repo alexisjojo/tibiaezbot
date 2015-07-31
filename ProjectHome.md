@@ -1,0 +1,1 @@
+The purpose of the bot is to create a free and easy alternative to tibia players.
